@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ."
+    "start": "GOOGLE_APPLICATION_CREDENTIALS=./robot-9b190e317393.json node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
