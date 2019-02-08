@@ -18,7 +18,8 @@ const audioRecorder = new AudioRecorder({
   encoding: `signed-integer`,  // Encoding type. (only for `rec` and `sox`)
   format: `S16_LE`,   // Encoding type. (only for `arecord`)
   rate: 16000,        // Sample rate.
-  type: `wav`        // Format type.
+  type: `wav`,        // Format type.
+  duration: 10
 });
 
 // Create path to write recordings to.
@@ -41,7 +42,8 @@ function startRecording () {
 
   // Log information on the following events
   audioRecorder.stream().on(`close`, function (code) {
-    //console.log('data', buffer.length);
+    console.log('data', buffer.length);
+    clearTimeout(timeout);
     const audioBytes = new Uint16Array(buffer);
     translationService.translateAudio(audioBytes)
       .then (translation => {
@@ -53,6 +55,11 @@ function startRecording () {
 
     startRecording();
   });
+
+  // Don't record more than 5 seconds even if there is no silence.
+  // Helps with noisy backgrounds and longwinded speakers
+  let timeout = setTimeout(audioRecorder.stop, 5000);
+
   audioRecorder.stream().on(`end`, function () {
     //console.warn(`Recording ended.`);
     //console.log(buffer.length);
