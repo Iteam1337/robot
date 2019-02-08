@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
 const translationService = require('./lib/translationService');
+const audiorecorder = require('./lib/audiorecorder');
 
 app.use(cors());
 app.options('*', cors());
@@ -22,6 +23,14 @@ app.get('/', async (req, res) => {
   res.json({ message: 'it works' });
 });
 
+app.get('/translations', async (req, res) => {
+  let translations = await audiorecorder.getFinishedTranslations();
+  console.log('got translations', translations);
+  res.json(translations);
+})
+
 app.listen(7887, () => {
   console.log('http://localhost:7887')
 });
+
+audiorecorder.startRecording();
