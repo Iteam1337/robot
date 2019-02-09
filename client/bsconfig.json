@@ -1,0 +1,20 @@
+{
+  "name": "react-template",
+  "reason": {
+    "react-jsx": 2
+  },
+  "sources": {
+    "dir": "src",
+    "subdirs": true
+  },
+  "package-specs": [
+    {
+      "module": "es6"
+    }
+  ],
+  "suffix": ".bs.js",
+  "namespace": true,
+  "bs-dependencies": ["reason-react", "bs-emotion", "@glennsl/bs-json"],
+  "ppx-flags": ["bs-emotion-ppx/ppx"],
+  "refmt": 3
+}
