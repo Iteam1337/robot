@@ -11,21 +11,9 @@ type action =
 
 let component = ReasonReact.reducerComponent(__MODULE__);
 let languages = [|"en-US", "sv-SE"|];
-let socket = WebSocket.ws("ws://localhost:8080");
 
 let make = _children => {
   ...component,
-
-  didMount: self => {
-    WebSocket.(
-      socket->listen("message", data => {
-        let message = data->Decode.message;
-        let translation = message->Decode.translation;
-
-        self.send(UpdateTranslation(translation));
-      })
-    );
-  },
 
   initialState: () => {
     input: "",
@@ -37,12 +25,22 @@ let make = _children => {
     },
   },
 
+  didMount: self => {
+    WebSocket.(
+      socket->listen("message", data =>
+        self.send(
+          UpdateTranslation(data->Decode.message->Decode.translation),
+        )
+      )
+    );
+  },
+
   reducer: (action, state) => {
     switch (action) {
     | UpdateTranslation(translation) =>
       ReasonReact.Update({...state, translation})
     | UpdateInput(input) => ReasonReact.Update({...state, input})
-    | UpdateOutput(input) => ReasonReact.Update({...state, input})
+    | UpdateOutput(output) => ReasonReact.Update({...state, output})
     };
   },
 
@@ -60,16 +58,14 @@ let make = _children => {
           value={state.output}
         />
       </div>
-      <ul className=AppStyle.translate>
-        <li key={state.translation.timestamp->string_of_int}>
-          <div className=AppStyle.response>
-            state.translation.translation->ReasonReact.string
-          </div>
-          <div className=AppStyle.spoken>
-            state.translation.transcription->ReasonReact.string
-          </div>
-        </li>
-      </ul>
+      <div className=AppStyle.translate>
+        <div className=AppStyle.response>
+          state.translation.translation->ReasonReact.string
+        </div>
+        <div className=AppStyle.spoken>
+          state.translation.transcription->ReasonReact.string
+        </div>
+      </div>
     </div>;
   },
 };

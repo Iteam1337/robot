@@ -11,9 +11,6 @@ let translate = [%css
     flexDirection(`column),
     height(`calc((`sub, `vh(100.0), `px(80)))),
     justifyContent(`center),
-    listStyleType(`none),
-    margin(`px(0)),
-    padding(`px(0)),
   ]
 ];
 
