@@ -6,7 +6,7 @@
 npm install
 npm start
 # in another tab
-npm run dev
+npm run server
 ```
 
 Open browser at http://localhost:4000
