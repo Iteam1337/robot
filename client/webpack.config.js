@@ -21,5 +21,6 @@ module.exports = {
     contentBase: outputDir,
     port: process.env.PORT || 4000,
     historyApiFallback: true,
+    stats: 'minimal',
   },
 }
