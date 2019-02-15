@@ -10,14 +10,13 @@ type action =
   | UpdateOutput(string);
 
 let component = ReasonReact.reducerComponent(__MODULE__);
-let languages = [|"en-US", "sv-SE"|];
 
 let make = _children => {
   ...component,
 
   initialState: () => {
-    input: "",
-    output: "",
+    input: "sv-SE",
+    output: "en-US",
     translation: {
       timestamp: 0,
       translation: "",
@@ -49,23 +48,33 @@ let make = _children => {
       <div className=AppStyle.dropdowns>
         <Dropdown
           onChange={v => send(UpdateInput(v))}
-          options=languages
+          options=Languages.supportedLanguages
+          placeholder="Select input language"
           value={state.input}
         />
         <Dropdown
           onChange={v => send(UpdateOutput(v))}
-          options=languages
+          options=Languages.supportedLanguages
+          placeholder="Select output language"
           value={state.output}
         />
       </div>
-      <div className=AppStyle.translate>
-        <div className=AppStyle.response>
-          state.translation.translation->ReasonReact.string
-        </div>
-        <div className=AppStyle.spoken>
-          state.translation.transcription->ReasonReact.string
-        </div>
-      </div>
+      {switch (state.translation.translation->Js.String.length) {
+       | 0 =>
+         <div
+           className={Cx.merge([|AppStyle.translate, AppStyle.emptyState|])}>
+           {js|Say something nice! 🤖|js}->ReasonReact.string
+         </div>
+       | _ =>
+         <div className=AppStyle.translate>
+           <div className=AppStyle.response>
+             state.translation.translation->ReasonReact.string
+           </div>
+           <div className=AppStyle.spoken>
+             state.translation.transcription->ReasonReact.string
+           </div>
+         </div>
+       }}
     </div>;
   },
 };

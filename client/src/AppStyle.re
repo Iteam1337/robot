@@ -16,13 +16,15 @@ let translate = [%css
 
 let spoken = [%css
   [
-    color(`hsl((175, 34, 10))),
-    fontSize(`px(21)),
+    color(Theme.Colors.secondary),
+    fontSize(`px(24)),
     fontWeight(600),
-    marginTop(`px(10)),
+    marginTop(`px(20)),
   ]
 ];
 
 let response = [%css
-  [color(`hsl((175, 34, 50))), fontSize(`px(100)), fontWeight(700)]
+  [color(Theme.Colors.primary), fontSize(`px(140)), fontWeight(700)]
 ];
+
+let emptyState = [%css [color(Theme.Colors.secondary), fontSize(`px(60))]];
