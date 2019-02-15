@@ -9,6 +9,8 @@ npm start
 npm run dev
 ```
 
+Open browser at http://localhost:4000
+
 ## Known issues
 
 If you get and error when running `npm run dev` containing the following
