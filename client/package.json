@@ -5,7 +5,7 @@
     "build": "bsb -make-world",
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --watch",
     "webpack": "webpack -w",
     "webpack:production": "NODE_ENV=production webpack",
     "server": "webpack-dev-server"
@@ -23,8 +23,10 @@
     "reason-react": "^0.5.3"
   },
   "devDependencies": {
+    "@glennsl/bs-jest": "^0.4.7",
     "bs-emotion-ppx": "0.0.6",
     "bs-platform": "4.0.18",
+    "bs-react-testing-library": "^0.4.0",
     "bsb-js": "^1.1.7",
     "html-webpack-plugin": "3.2.0",
     "webpack": "^4.29.3",
