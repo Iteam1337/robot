@@ -2,7 +2,20 @@ open Emotion;
 
 let wrap = [%css [padding(`px(40))]];
 
-let dropdowns = [%css [position(`fixed), right(`px(40)), top(`px(40))]];
+let logo = [%css [fontSize(`px(60))]];
+
+let header = [%css
+  [
+    alignItems(`center),
+    display(`flex),
+    justifyContent(`center),
+    left(`px(0)),
+    padding(`px(20)),
+    position(`fixed),
+    right(`px(0)),
+    top(`px(0)),
+  ]
+];
 
 let translate = [%css
   [

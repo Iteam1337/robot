@@ -1,8 +1,22 @@
 type ws;
 
-type translation = {
+module Translation = {
+  type t = {
+    language: string,
+    text: string,
+  };
+
+  let decode = json =>
+    Json.Decode.{
+      language: json |> field("language", string),
+      text: json |> field("text", string),
+    };
+};
+
+type t = {
+  origin: string,
   timestamp: int,
-  translation: string,
+  translations: array(Translation.t),
   transcription: string,
 };
 
@@ -12,10 +26,11 @@ type translation = {
 external listen: (ws, string, Js.Json.t => unit) => 'a = "addEventListener";
 
 module Decode = {
-  let translation = json =>
+  let response = json =>
     Json.Decode.{
+      origin: json |> field("origin", string),
       timestamp: json |> field("timestamp", int),
-      translation: json |> field("translation", string),
+      translations: json |> field("translations", array(Translation.decode)),
       transcription: json |> field("transcription", string),
     };
 

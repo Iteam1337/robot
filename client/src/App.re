@@ -1,13 +1,7 @@
-type state = {
-  input: string,
-  output: string,
-  translation: WebSocket.translation,
-};
+type state = {ws: WebSocket.t};
 
 type action =
-  | UpdateTranslation(WebSocket.translation)
-  | UpdateInput(string)
-  | UpdateOutput(string);
+  | UpdateTranslation(WebSocket.t);
 
 let component = ReasonReact.reducerComponent(__MODULE__);
 
@@ -15,11 +9,10 @@ let make = _children => {
   ...component,
 
   initialState: () => {
-    input: "sv-SE",
-    output: "en-US",
-    translation: {
+    ws: {
+      origin: "",
       timestamp: 0,
-      translation: "",
+      translations: [||],
       transcription: "",
     },
   },
@@ -27,52 +20,32 @@ let make = _children => {
   didMount: self => {
     WebSocket.(
       socket->listen("message", data =>
-        self.send(
-          UpdateTranslation(data->Decode.message->Decode.translation),
-        )
+        self.send(UpdateTranslation(data->Decode.message->Decode.response))
       )
     );
   },
 
-  reducer: (action, state) => {
+  reducer: (action, _state) => {
     switch (action) {
-    | UpdateTranslation(translation) =>
-      ReasonReact.Update({...state, translation})
-    | UpdateInput(input) => ReasonReact.Update({...state, input})
-    | UpdateOutput(output) => ReasonReact.Update({...state, output})
+    | UpdateTranslation(ws) => ReasonReact.Update({ws: ws})
     };
   },
 
-  render: ({send, state}) => {
+  render: ({state: {ws}}) => {
     <div className=AppStyle.wrap>
-      <div className=AppStyle.dropdowns>
-        <Dropdown
-          onChange={v => send(UpdateInput(v))}
-          options=Languages.supportedLanguages
-          placeholder="Select input language"
-          value={state.input}
-        />
-        <Dropdown
-          onChange={v => send(UpdateOutput(v))}
-          options=Languages.supportedLanguages
-          placeholder="Select output language"
-          value={state.output}
-        />
-      </div>
-      {switch (state.translation.translation->Js.String.length) {
-       | 0 =>
-         <div
-           className={Cx.merge([|AppStyle.translate, AppStyle.emptyState|])}>
-           {js|Say something nice! 🤖|js}->ReasonReact.string
-         </div>
+      <header className=AppStyle.header>
+        <div className=AppStyle.logo> {js|🤖|js}->Utils.str </div>
+      </header>
+      {switch (ws.transcription->Js.String.length) {
+       | 0 => <EmptyState />
        | _ =>
          <div className=AppStyle.translate>
-           <div className=AppStyle.response>
-             state.translation.translation->ReasonReact.string
-           </div>
-           <div className=AppStyle.spoken>
-             state.translation.transcription->ReasonReact.string
-           </div>
+           {ws.translations
+            ->Belt.Array.map(({text}) =>
+                <div className=AppStyle.response> text->Utils.str </div>
+              )
+            ->ReasonReact.array}
+           <div className=AppStyle.spoken> ws.transcription->Utils.str </div>
          </div>
        }}
     </div>;
