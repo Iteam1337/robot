@@ -35,20 +35,11 @@ let make = _children => {
        | _ =>
          <ul className=AppStyle.translations id="list">
            {state.ws
-            ->Belt.Array.map(t =>
-                <li
-                  className=AppStyle.translation
-                  key={t.timestamp->string_of_int}>
-                  {t.translations
-                   ->Belt.Array.map(translation =>
-                       <Bubble
-                         key={translation.rawLanguage}
-                         translation
-                         transcription={t.transcription}
-                       />
-                     )
-                   ->ReasonReact.array}
-                </li>
+            ->Belt.Array.map(translation =>
+                <Bubble
+                  key={translation.timestamp->string_of_int}
+                  translation
+                />
               )
             ->ReasonReact.array}
          </ul>

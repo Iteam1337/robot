@@ -40,5 +40,3 @@ let spoken = [%css
 ];
 
 let flag = [%css [marginRight(`px(20))]];
-
-let emptyState = [%css [color(Theme.Colors.secondary), fontSize(`px(60))]];

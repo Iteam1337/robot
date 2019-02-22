@@ -3,7 +3,7 @@ let component = ReasonReact.statelessComponent(__MODULE__);
 module Style = {
   open Emotion;
 
-  let flag = [%css [marginRight(`px(20))]];
+  let flag = [%css [fontSize(`px(24)), marginRight(`px(10))]];
 };
 
 let make = (~language: WebSocket.Language.t, _children) => {
@@ -17,6 +17,8 @@ let make = (~language: WebSocket.Language.t, _children) => {
          | Spanish => {js|🇪🇸|js}
          | French => {js|🇫🇷|js}
          | Chinese => {js|🇨🇳|js}
+         | Russian => {js|🇷🇺|js}
+         | Romanian => {js|🇷🇴|js}
          | _ => ""
          }
        )

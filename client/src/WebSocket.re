@@ -8,16 +8,20 @@ module Language = {
     | French
     | Spanish
     | Chinese
+    | Russian
+    | Romanian
     | UnknownLanguage;
 
   let decode = input =>
     switch (input) {
     | "sv" => Swedish
     | "en" => English
-    | "ge" => German
+    | "de" => German
     | "fr" => French
     | "es" => Spanish
-    | "ch" => Chinese
+    | "ru" => Russian
+    | "ro" => Romanian
+    | "zh" => Chinese
     | _ => UnknownLanguage
     };
 };
