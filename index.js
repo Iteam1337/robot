@@ -6,8 +6,9 @@ const app = express()
 const cors = require('cors')
 const translationService = require('./lib/translationService')
 const audiorecorder = require('./lib/audiorecorder')
-const socket = require('./lib/utils/socket')
+require('./lib/utils/socket')
 const ifaces = require('os').networkInterfaces();
+const rp = require('request-promise')
 
 const webport = 7887
 let receivingServer = process.argv[2]
@@ -49,13 +50,11 @@ app.get('/translations', async (req, res) => {
 })
 
 app.post('/receivetranslation', async (req, res) => {
-  console.log(req.body);
   let translation = req.body;
   translation.origin = 'other';
-  console.log('Adding', translation);
   audiorecorder.addTranslation(translation);
 
-  res.send(200);
+  res.sendStatus(200);
 });
 
 app.listen(webport, () => {
@@ -66,7 +65,22 @@ audiorecorder.translationEvents.on('translation', (translation) => {
   if (translation.origin !== 'other' && receivingServer) {
     // todo: check for ip
     delete translation.origin;
-    console.log('Skickar', translation, 'till', receivingServer);
+    var options = {
+      method: 'POST',
+      uri: receivingServer + '/receivetranslation',
+      body: {
+        translation
+      },
+      json: true // Automatically stringifies the body to JSON
+    };
+
+    rp(options)
+      .then(result => {
+        console.log('Translation sent')
+      })
+      .catch(error => {
+        console.error('Could not send translation', error)
+      })
   }
 });
 
