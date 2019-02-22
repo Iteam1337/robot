@@ -20,4 +20,23 @@ brew install sox
 ### For Windows
 [Download the binaries](http://sourceforge.net/projects/sox/files/latest/download)
 
+## Running the project 
+
+### Starting the server
+
+In ./
+
+1. $:>npm install
+2. $:>GOOGLE_APPLICATION_CREDENTIALS="yourgooglecredentialsfile.json" node index http://counterpartserver:port
+
+### Starting the frontend
+
+In ./client
+
+1. $:>npm install
+2. $:>npm start
+3. Open new shell/tab
+4. $:>npm run server
+5. Browse to http://localhost:4000
+
 
