@@ -24,6 +24,7 @@ module Style = {
       fontSize(`px(14)),
       padding2(`px(20), `px(30)),
       position(`relative),
+      transition("width", `ms(150), `easeInOut, `zero),
       width(`pct(100.0)),
       select(":not(:last-child)", [marginBottom(`px(30))]),
       media("(min-width: 768px)", [width(`pct(48.0))]),
