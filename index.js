@@ -33,10 +33,13 @@ app.get('/translations', async (req, res) => {
 })
 
 app.post('/receivetranslation', async (req, res) => {
+  console.log(req.body);
   let translation = req.body;
   translation.origin = 'other';
   console.log('Adding', translation);
   audiorecorder.addTranslation(translation);
+
+  res.send(200);
 });
 
 app.listen(webport, () => {
