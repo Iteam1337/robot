@@ -7,8 +7,24 @@ const cors = require('cors')
 const translationService = require('./lib/translationService')
 const audiorecorder = require('./lib/audiorecorder')
 const socket = require('./lib/utils/socket')
+const ifaces = require('os').networkInterfaces();
 
 const webport = 7887
+let receivingServer = process.argv[2]
+
+const serveraddresses = [];
+
+Object.keys(ifaces).forEach(ifaceName => {
+  let iface = ifaces[ifaceName];
+
+  iface.forEach(setting => {
+    if ('IPv4' === setting.family && setting.internal === false) {
+      // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
+      serveraddresses.push('http://' + setting.address + ':' + webport);
+    }
+  });
+});
+
 
 app.use(cors())
 app.options('*', cors())
@@ -43,7 +59,15 @@ app.post('/receivetranslation', async (req, res) => {
 });
 
 app.listen(webport, () => {
-  console.log('http://localhost:' + webport, 'Motpart ansluter på', )
+  console.log('\n\n==> Motpart ansluter på', serveraddresses.join(' eller '), '\n\n')
 })
+
+audiorecorder.translationEvents.on('translation', (translation) => {
+  if (translation.origin !== 'other' && receivingServer) {
+    // todo: check for ip
+    delete translation.origin;
+    console.log('Skickar', translation, 'till', receivingServer);
+  }
+});
 
 audiorecorder.startRecording()
