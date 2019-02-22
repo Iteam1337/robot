@@ -11,21 +11,6 @@ let make = _children => {
   initialState: () => {ws: [||]},
 
   didMount: self => {
-    /* self.send( */
-    /*   UpdateTranslation({ */
-    /*     origin: WebSocket.Origin.Me, */
-    /*     transcription: "lorem aepgroj aepgj aepojgpaeo gpoaegjrpaegrjpaejgrpaerj */
-           /*       gpjaepgrj aepjgrpaejgpj epj gpaejgrpj apegjp", */
-    /*     translations: [| */
-    /*       {language: English, text: "Hello", rawLanguage: "en"}, */
-    /*       {language: Spanish, text: "Hola", rawLanguage: "es"}, */
-    /*       {language: German, text: "Hallo", rawLanguage: "ge"}, */
-    /*       {language: French, text: "Bonjour", rawLanguage: "fr"}, */
-    /*       {language: Chinese, text: {js|你好|js}, rawLanguage: "ch"}, */
-    /*     |], */
-    /*     timestamp: 0, */
-    /*   }), */
-    /* ); */
     WebSocket.(
       socket->listen("message", data =>
         self.send(UpdateTranslation(data->Decode.message->Decode.response))
@@ -40,48 +25,34 @@ let make = _children => {
     };
   },
 
-  render: ({state: {ws}}) => {
-    <div className=AppStyle.wrap>
+  render: ({state}) => {
+    <>
       <header className=AppStyle.header>
         <div className=AppStyle.logo> {js|🤖|js}->Utils.str </div>
       </header>
-      {switch (ws->Belt.Array.length) {
+      {switch (state.ws->Belt.Array.length) {
        | 0 => <EmptyState />
        | _ =>
-         <div className=AppStyle.translate>
-           {ws
+         <ul className=AppStyle.translations id="list">
+           {state.ws
             ->Belt.Array.map(t =>
-                <div
+                <li
                   className=AppStyle.translation
                   key={t.timestamp->string_of_int}>
                   {t.translations
-                   ->Belt.Array.map(({language, rawLanguage, text}) =>
-                       <div className=AppStyle.response key=rawLanguage>
-                         <div className=AppStyle.flag>
-                           {(
-                              switch (language) {
-                              | English => {js|🇬🇧|js}
-                              | German => {js|🇩🇪|js}
-                              | Spanish => {js|🇪🇸|js}
-                              | French => {js|🇫🇷|js}
-                              | Chinese => {js|🇨🇳|js}
-                              | _ => ""
-                              }
-                            )
-                            |> Utils.str}
-                         </div>
-                         text->Utils.str
-                       </div>
+                   ->Belt.Array.map(translation =>
+                       <Bubble
+                         key={translation.rawLanguage}
+                         translation
+                         transcription={t.transcription}
+                       />
                      )
                    ->ReasonReact.array}
-                  <div className=AppStyle.spoken>
-                    t.transcription->Utils.str
-                  </div>
-                </div>
+                </li>
               )
             ->ReasonReact.array}
-         </div>
+         </ul>
        }}
-    </div>;
+    </>;
   },
 };
