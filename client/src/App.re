@@ -15,7 +15,8 @@ let make = _children => {
       socket->listen("message", data =>
         self.send(UpdateTranslation(data->Decode.message->Decode.response))
       )
-    );
+    )
+    |> ignore;
   },
 
   reducer: (action, state) => {
@@ -27,20 +28,30 @@ let make = _children => {
 
   render: ({state}) => {
     <>
-      <header className=AppStyle.header>
-        <div className=AppStyle.logo> {js|🤖|js}->Utils.str </div>
-      </header>
+      <Header />
       {switch (state.ws->Belt.Array.length) {
        | 0 => <EmptyState />
        | _ =>
          <ul className=AppStyle.translations id="list">
            {state.ws
-            ->Belt.Array.map(translation =>
+            ->Belt.Array.mapWithIndex((i, translation) => {
+                let previousOrigin =
+                  switch (state.ws->Belt.Array.get(i - 1)) {
+                  | Some({origin}) => Some(origin)
+                  | None => None
+                  };
+                let nextOrigin =
+                  switch (state.ws->Belt.Array.get(i + 1)) {
+                  | Some({origin}) => Some(origin)
+                  | None => None
+                  };
+
                 <Bubble
                   key={translation.timestamp->string_of_int}
+                  surroundingOrigins=(previousOrigin, nextOrigin)
                   translation
-                />
-              )
+                />;
+              })
             ->ReasonReact.array}
          </ul>
        }}

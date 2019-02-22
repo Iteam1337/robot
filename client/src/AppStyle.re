@@ -1,19 +1,9 @@
 open Emotion;
 
-let logo = [%css [fontSize(`px(60))]];
-
-let header = [%css
-  [
-    alignItems(`center),
-    display(`flex),
-    justifyContent(`center),
-    padding(`px(20)),
-  ]
-];
-
 let translations = [%css
   [
     padding(`px(20)),
+    paddingTop(`px(150)),
     display(`inlineFlex),
     flexDirection(`column),
     overflow(`scroll),
