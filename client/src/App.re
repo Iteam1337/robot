@@ -1,4 +1,4 @@
-type state = {ws: WebSocket.t};
+type state = {ws: array(WebSocket.t)};
 
 type action =
   | UpdateTranslation(WebSocket.t);
@@ -8,14 +8,7 @@ let component = ReasonReact.reducerComponent(__MODULE__);
 let make = _children => {
   ...component,
 
-  initialState: () => {
-    ws: {
-      origin: "",
-      timestamp: 0,
-      translations: [||],
-      transcription: "",
-    },
-  },
+  initialState: () => {ws: [||]},
 
   didMount: self => {
     WebSocket.(
@@ -25,9 +18,10 @@ let make = _children => {
     );
   },
 
-  reducer: (action, _state) => {
+  reducer: (action, state) => {
     switch (action) {
-    | UpdateTranslation(ws) => ReasonReact.Update({ws: ws})
+    | UpdateTranslation(ws) =>
+      ReasonReact.Update({ws: [|ws|]->Belt.Array.concat(state.ws)})
     };
   },
 
@@ -36,16 +30,24 @@ let make = _children => {
       <header className=AppStyle.header>
         <div className=AppStyle.logo> {js|🤖|js}->Utils.str </div>
       </header>
-      {switch (ws.transcription->Js.String.length) {
+      {switch (ws->Belt.Array.length) {
        | 0 => <EmptyState />
        | _ =>
          <div className=AppStyle.translate>
-           {ws.translations
-            ->Belt.Array.map(({text}) =>
-                <div className=AppStyle.response> text->Utils.str </div>
+           {ws
+            ->Belt.Array.map(t =>
+                <div className=AppStyle.translation>
+                  {t.translations
+                   ->Belt.Array.map(({text}) =>
+                       <div className=AppStyle.response> text->Utils.str </div>
+                     )
+                   ->ReasonReact.array}
+                  <div className=AppStyle.spoken>
+                    t.transcription->Utils.str
+                  </div>
+                </div>
               )
             ->ReasonReact.array}
-           <div className=AppStyle.spoken> ws.transcription->Utils.str </div>
          </div>
        }}
     </div>;

@@ -27,6 +27,13 @@ let translate = [%css
   ]
 ];
 
+let translation = [%css
+  [
+    fontSize(`px(100)),
+    select(":not(:first-child)", [fontSize(`px(60))]),
+  ]
+];
+
 let spoken = [%css
   [
     color(Theme.Colors.secondary),
@@ -36,8 +43,6 @@ let spoken = [%css
   ]
 ];
 
-let response = [%css
-  [color(Theme.Colors.primary), fontSize(`px(140)), fontWeight(700)]
-];
+let response = [%css [color(Theme.Colors.primary), fontWeight(700)]];
 
 let emptyState = [%css [color(Theme.Colors.secondary), fontSize(`px(60))]];
