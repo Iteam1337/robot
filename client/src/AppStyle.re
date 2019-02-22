@@ -29,20 +29,36 @@ let translate = [%css
 
 let translation = [%css
   [
-    fontSize(`px(100)),
-    select(":not(:first-child)", [fontSize(`px(60))]),
+    alignItems(`center),
+    display(`flex),
+    flexDirection(`column),
+    fontSize(`px(40)),
+    maxWidth(`vw(50.0)),
+    textAlign(`center),
+    select(":not(:first-child)", [fontSize(`px(60)), opacity(0.5)]),
   ]
 ];
 
 let spoken = [%css
   [
     color(Theme.Colors.secondary),
-    fontSize(`px(24)),
-    fontWeight(600),
+    fontSize(`px(18)),
+    fontWeight(400),
     marginTop(`px(20)),
+    maxWidth(`pct(80.0)),
   ]
 ];
 
-let response = [%css [color(Theme.Colors.primary), fontWeight(700)]];
+let response = [%css
+  [
+    color(Theme.Colors.primary),
+    display(`flex),
+    flexGrow(1.0),
+    fontWeight(700),
+    marginBottom(`px(10)),
+  ]
+];
+
+let flag = [%css [marginRight(`px(30))]];
 
 let emptyState = [%css [color(Theme.Colors.secondary), fontSize(`px(60))]];
