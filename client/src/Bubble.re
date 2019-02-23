@@ -102,10 +102,7 @@ module Style = {
 let make =
     (
       ~displayTime,
-      ~surroundingOrigins: (
-         option(WebSocket.Origin.t),
-         option(WebSocket.Origin.t),
-       ),
+      ~surroundingOrigins: (option(Origin.t), option(Origin.t)),
       ~translation: WebSocket.t,
       ~toggleTime,
       _children,

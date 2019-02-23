@@ -22,8 +22,7 @@ module Style = {
   let flagInner = [%css [position(`relative), top(`px(2))]];
 };
 
-let make =
-    (~origin: WebSocket.Origin.t, ~language: WebSocket.Language.t, _children) => {
+let make = (~origin: Origin.t, ~language: Language.t, _children) => {
   ...component,
   render: _self => {
     <div

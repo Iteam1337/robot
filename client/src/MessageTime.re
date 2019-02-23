@@ -38,20 +38,24 @@ let addLeadingZero = date => {
   };
 };
 
+let hoursAndMinutes = timestamp => {
+  let date = Js.Date.fromFloat(timestamp->float_of_int);
+
+  date->Js.Date.getHours->addLeadingZero
+  ++ ":"
+  ++ date->Js.Date.getMinutes->addLeadingZero
+  |> Utils.str;
+};
+
 let make = (~timestamp, ~displayTime: int, _children) => {
   ...component,
   render: _self => {
-    let date = Js.Date.fromFloat(timestamp->float_of_int);
-
     <div
       className={Cx.merge([|
         Style.time,
         displayTime === timestamp ? Style.timeDisplayed : "",
       |])}>
-      {date->Js.Date.getHours->addLeadingZero
-       ++ ":"
-       ++ date->Js.Date.getMinutes->addLeadingZero
-       |> Utils.str}
+      {hoursAndMinutes(timestamp)}
     </div>;
   },
 };

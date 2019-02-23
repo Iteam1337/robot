@@ -9,6 +9,21 @@ type action =
 
 let component = ReasonReact.reducerComponent(__MODULE__);
 
+module Style = {
+  open Emotion;
+
+  let translations = [%css
+    [
+      padding(`px(20)),
+      paddingTop(`px(150)),
+      display(`inlineFlex),
+      flexDirection(`column),
+      overflow(`scroll),
+      width(`pct(100.0)),
+    ]
+  ];
+};
+
 let make = _children => {
   ...component,
 
@@ -44,7 +59,7 @@ let make = _children => {
       {switch (state.ws->Belt.Array.length) {
        | 0 => <EmptyState />
        | _ =>
-         <ul className=AppStyle.translations id="list">
+         <ul className=Style.translations id="list">
            {state.ws
             ->Belt.Array.mapWithIndex((i, translation) => {
                 let previousOrigin =
