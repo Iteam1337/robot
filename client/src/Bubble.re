@@ -49,25 +49,25 @@ module Style = {
   let otherNextIsSame = [%css [borderTopLeftRadius(`px(6))]];
   let otherBothAreSame = [%css
     [
-      important(marginBottom(`px(15))),
+      important(marginBottom(`px(10))),
       borderBottomLeftRadius(`px(6)),
       borderTopLeftRadius(`px(6)),
     ]
   ];
   let otherPreviousIsSame = [%css
-    [important(marginBottom(`px(15))), borderBottomLeftRadius(`px(6))]
+    [important(marginBottom(`px(10))), borderBottomLeftRadius(`px(6))]
   ];
 
   let meNextIsSame = [%css [borderTopRightRadius(`px(6))]];
   let meBothAreSame = [%css
     [
-      important(marginBottom(`px(15))),
+      important(marginBottom(`px(10))),
       borderBottomRightRadius(`px(6)),
       borderTopRightRadius(`px(6)),
     ]
   ];
   let mePreviousIsSame = [%css
-    [important(marginBottom(`px(15))), borderBottomRightRadius(`px(6))]
+    [important(marginBottom(`px(10))), borderBottomRightRadius(`px(6))]
   ];
 
   let translations = [%css
