@@ -9,12 +9,23 @@ module Style = {
       (100, [transform(`scale(1.0))]),
     ]);
 
+  let wrap = [%css
+    [
+      position(`relative),
+      width(`pct(100.0)),
+      media("(min-width: 768px)", [width(`pct(48.0))]),
+    ]
+  ];
+
+  let wrapMe = [%css [alignSelf(`flexEnd)]];
+
   let bubble = [%css
     [
       animationName(fadeIn),
       animationDuration(`ms(300)),
       animationIterationCount(`i(1)),
       backgroundColor(`hex("e5e4ea")),
+      border(`zero, `none, `currentColor),
       borderRadius(`px(30)),
       boxShadows([
         (`zero, `px(4), `px(6), `zero, `rgba((0, 6, 56, 0.1)), false),
@@ -24,19 +35,15 @@ module Style = {
       fontSize(`px(14)),
       padding2(`px(20), `px(30)),
       position(`relative),
+      textAlign(`left),
       transition("width", `ms(150), `easeInOut, `zero),
       width(`pct(100.0)),
       select(":not(:last-child)", [marginBottom(`px(30))]),
-      media("(min-width: 768px)", [width(`pct(48.0))]),
     ]
   ];
 
   let bubbleMe = [%css
-    [
-      alignSelf(`flexEnd),
-      backgroundColor(`hex("0c84fe")),
-      color(`hex("dceeff")),
-    ]
+    [backgroundColor(`hex("0c84fe")), color(`hex("dceeff"))]
   ];
 
   let otherNextIsSame = [%css [borderTopLeftRadius(`px(6))]];
@@ -94,48 +101,62 @@ module Style = {
 
 let make =
     (
+      ~displayTime,
       ~surroundingOrigins: (
          option(WebSocket.Origin.t),
          option(WebSocket.Origin.t),
        ),
       ~translation: WebSocket.t,
+      ~toggleTime,
       _children,
     ) => {
   ...component,
+
   render: _self => {
     <li
       className={Cx.merge([|
-        Style.bubble,
+        Style.wrap,
         switch (translation.origin) {
-        | Me => Style.bubbleMe
+        | Me => Style.wrapMe
         | Other => ""
         },
-        switch (translation.origin, surroundingOrigins) {
-        | (Other, (Some(Other), Some(Other))) => Style.otherBothAreSame
-        | (Other, (Some(Other), _)) => Style.otherNextIsSame
-        | (Other, (_, Some(Other))) => Style.otherPreviousIsSame
-        | (Me, (Some(Me), Some(Me))) => Style.meBothAreSame
-        | (Me, (Some(Me), _)) => Style.meNextIsSame
-        | (Me, (_, Some(Me))) => Style.mePreviousIsSame
-        | _ => ""
-        },
       |])}>
-      <div className=Style.translations>
-        {translation.translations
-         ->Belt.Array.map(t =>
-             <div className=Style.translation key={t.rawLanguage}>
-               <Flag language={t.language} origin={translation.origin} />
-               <div className=Style.translationText> t.text->Utils.str </div>
-             </div>
-           )
-         ->ReasonReact.array}
-        <div className=Style.translation>
-          <Flag language=Swedish origin={translation.origin} />
-          <div className=Style.translationText>
-            translation.transcription->Utils.str
+      <MessageTime displayTime timestamp={translation.timestamp} />
+      <button
+        className={Cx.merge([|
+          Style.bubble,
+          switch (translation.origin) {
+          | Me => Style.bubbleMe
+          | Other => ""
+          },
+          switch (translation.origin, surroundingOrigins) {
+          | (Other, (Some(Other), Some(Other))) => Style.otherBothAreSame
+          | (Other, (Some(Other), _)) => Style.otherNextIsSame
+          | (Other, (_, Some(Other))) => Style.otherPreviousIsSame
+          | (Me, (Some(Me), Some(Me))) => Style.meBothAreSame
+          | (Me, (Some(Me), _)) => Style.meNextIsSame
+          | (Me, (_, Some(Me))) => Style.mePreviousIsSame
+          | _ => ""
+          },
+        |])}
+        onClick=toggleTime>
+        <div className=Style.translations>
+          {translation.translations
+           ->Belt.Array.map(t =>
+               <div className=Style.translation key={t.rawLanguage}>
+                 <Flag language={t.language} origin={translation.origin} />
+                 <div className=Style.translationText> t.text->Utils.str </div>
+               </div>
+             )
+           ->ReasonReact.array}
+          <div className=Style.translation>
+            <Flag language=Swedish origin={translation.origin} />
+            <div className=Style.translationText>
+              translation.transcription->Utils.str
+            </div>
           </div>
         </div>
-      </div>
+      </button>
     </li>;
   },
 };

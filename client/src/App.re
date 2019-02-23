@@ -1,6 +1,10 @@
-type state = {ws: array(WebSocket.t)};
+type state = {
+  displayTime: int,
+  ws: array(WebSocket.t),
+};
 
 type action =
+  | ToggleTime(int)
   | UpdateTranslation(WebSocket.t);
 
 let component = ReasonReact.reducerComponent(__MODULE__);
@@ -8,7 +12,7 @@ let component = ReasonReact.reducerComponent(__MODULE__);
 let make = _children => {
   ...component,
 
-  initialState: () => {ws: [||]},
+  initialState: () => {displayTime: 0, ws: [||]},
 
   didMount: self => {
     WebSocket.(
@@ -21,12 +25,20 @@ let make = _children => {
 
   reducer: (action, state) => {
     switch (action) {
+    | ToggleTime(displayTime) =>
+      ReasonReact.Update({
+        ...state,
+        displayTime: displayTime === state.displayTime ? 0 : displayTime,
+      })
     | UpdateTranslation(ws) =>
-      ReasonReact.Update({ws: [|ws|]->Belt.Array.concat(state.ws)})
+      ReasonReact.Update({
+        ...state,
+        ws: [|ws|]->Belt.Array.concat(state.ws),
+      })
     };
   },
 
-  render: ({state}) => {
+  render: ({send, state}) => {
     <>
       <Header />
       {switch (state.ws->Belt.Array.length) {
@@ -47,9 +59,11 @@ let make = _children => {
                   };
 
                 <Bubble
+                  displayTime={state.displayTime}
                   key={translation.timestamp->string_of_int}
                   surroundingOrigins=(previousOrigin, nextOrigin)
                   translation
+                  toggleTime={_ => send(ToggleTime(translation.timestamp))}
                 />;
               })
             ->ReasonReact.array}
