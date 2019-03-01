@@ -24,14 +24,16 @@ brew install sox
 
 ### Starting the server
 
-In ./
+in ./
+1. Put your api-credentials in robot-9b190e317393.json
+2. npm install
+3. npm start http://counterpartserver:port
 
-1. $:>npm install
-2. $:>GOOGLE_APPLICATION_CREDENTIALS="yourgooglecredentialsfile.json" node index http://counterpartserver:port
+(you don't need to specify a counterpart server if you just want to use it locally)
 
 ### Starting the frontend
 
-In ./client
+cd ./client
 
 1. $:>npm install
 2. $:>npm start
