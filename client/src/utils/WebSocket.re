@@ -2,7 +2,7 @@ type ws;
 
 type t = {
   origin: Origin.t,
-  timestamp: int,
+  timestamp: float,
   translations: array(Translation.t),
   transcription: string,
 };
@@ -16,7 +16,7 @@ module Decode = {
   let response = json =>
     Json.Decode.{
       origin: json |> field("origin", string) |> Origin.decode,
-      timestamp: json |> field("timestamp", int),
+      timestamp: json |> field("timestamp", float),
       translations: json |> field("translations", array(Translation.decode)),
       transcription: json |> field("transcription", string),
     };

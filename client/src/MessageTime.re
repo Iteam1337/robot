@@ -39,7 +39,7 @@ let addLeadingZero = date => {
 };
 
 let hoursAndMinutes = timestamp => {
-  let date = Js.Date.fromFloat(timestamp->float_of_int);
+  let date = Js.Date.fromFloat(timestamp);
 
   date->Js.Date.getHours->addLeadingZero
   ++ ":"
@@ -47,7 +47,7 @@ let hoursAndMinutes = timestamp => {
   |> Utils.str;
 };
 
-let make = (~timestamp, ~displayTime: int, _children) => {
+let make = (~timestamp, ~displayTime: float, _children) => {
   ...component,
   render: _self => {
     <div
