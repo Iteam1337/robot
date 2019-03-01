@@ -7,25 +7,24 @@ const cors = require('cors')
 const translationService = require('./lib/translationService')
 const audiorecorder = require('./lib/audiorecorder')
 require('./lib/utils/socket')
-const ifaces = require('os').networkInterfaces();
+const ifaces = require('os').networkInterfaces()
 const rp = require('request-promise')
 
 const webport = 7887
-let receivingServer = process.argv[2]
+const receivingServer = process.argv[2]
 
-const serveraddresses = [];
+const serveraddresses = []
 
 Object.keys(ifaces).forEach(ifaceName => {
-  let iface = ifaces[ifaceName];
+  const iface = ifaces[ifaceName]
 
   iface.forEach(setting => {
     if ('IPv4' === setting.family && setting.internal === false) {
       // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
-      serveraddresses.push('http://' + setting.address + ':' + webport);
+      serveraddresses.push(`http://${setting.address}:${webport}`)
     }
-  });
-});
-
+  })
+})
 
 app.use(cors())
 app.options('*', cors())
@@ -44,36 +43,39 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/translations', async (req, res) => {
-  let translations = await audiorecorder.getFinishedTranslations()
+  const translations = await audiorecorder.getFinishedTranslations()
   console.log('got translations', translations)
   res.json(translations)
 })
 
 app.post('/receivetranslation', async (req, res) => {
-  let translation = req.body;
-  translation.origin = 'other';
-  console.log('translation received', translation)
-  audiorecorder.addTranslation(translation);
+  const { translation } = req.body
+  translation.origin = 'other'
+  audiorecorder.addTranslation(translation)
 
-  res.sendStatus(200);
-});
-
-app.listen(webport, () => {
-  console.log('\n\n==> Motpart ansluter på', serveraddresses.join(' eller '), '\n\n')
+  res.sendStatus(200)
 })
 
-audiorecorder.translationEvents.on('translation', (translation) => {
+app.listen(webport, () => {
+  console.log(
+    '\n\n==> Motpart ansluter på',
+    serveraddresses.join(' eller '),
+    '\n\n'
+  )
+})
+
+audiorecorder.translationEvents.on('translation', translation => {
   if (translation.origin !== 'other' && receivingServer) {
     // todo: check for ip
-    delete translation.origin;
-    var options = {
+    delete translation.origin
+    const options = {
       method: 'POST',
-      uri: receivingServer + '/receivetranslation',
+      uri: `${receivingServer}/receivetranslation`,
       body: {
-        translation
+        translation,
       },
-      json: true // Automatically stringifies the body to JSON
-    };
+      json: true, // Automatically stringifies the body to JSON
+    }
 
     rp(options)
       .then(result => {
@@ -83,6 +85,6 @@ audiorecorder.translationEvents.on('translation', (translation) => {
         console.error('Could not send translation', error)
       })
   }
-});
+})
 
 audiorecorder.startRecording()
