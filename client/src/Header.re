@@ -1,3 +1,5 @@
+let s = ReasonReact.string;
+
 type state = {scrollPosition: int};
 
 type action =
@@ -14,7 +16,7 @@ module Style = {
       backgroundColor(`rgba((255, 255, 255, 0.9))),
       display(`flex),
       fontSize(`px(60)),
-      justifyContent(`center),
+      justifyContent(`spaceBetween),
       left(`zero),
       padding(`px(20)),
       position(`fixed),
@@ -28,9 +30,11 @@ module Style = {
   ];
 
   let headerScrolled = [%css [fontSize(`px(24)), padding(`px(10))]];
+
+  let mode = [%css [alignItems(`center), display(`flex)]];
 };
 
-let make = _children => {
+let make = (~currentDisplayMode, ~changeDisplayMode, _children) => {
   ...component,
   initialState: () => {scrollPosition: 0},
 
@@ -60,6 +64,18 @@ let make = _children => {
         Style.header,
         state.scrollPosition > 0 ? Style.headerScrolled : "",
       |])}>
-      {js|🤖|js}->Utils.str
+      <div> {js|🤖|js}->Utils.str </div>
+      <div className=Style.mode>
+        <Button
+          active={currentDisplayMode === Mode.Conversation}
+          onClick={_ => changeDisplayMode(Mode.Conversation)}>
+          {s("Conversation")}
+        </Button>
+        <Button
+          active={currentDisplayMode === Mode.Presentation}
+          onClick={_ => changeDisplayMode(Mode.Presentation)}>
+          {s("Presentation")}
+        </Button>
+      </div>
     </header>,
 };

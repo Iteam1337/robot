@@ -16,7 +16,7 @@ module Decode = {
   let response = json =>
     Json.Decode.{
       origin: json |> field("origin", string) |> Origin.decode,
-      timestamp: json |> field("timestamp", float),
+      timestamp: json |> field("timestamp", Json.Decode.float),
       translations: json |> field("translations", array(Translation.decode)),
       transcription: json |> field("transcription", string),
     };

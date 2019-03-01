@@ -1,10 +1,14 @@
+let s = ReasonReact.string;
+
 type state = {
+  displayMode: Mode.t,
   displayTime: float,
   ws: array(WebSocket.t),
 };
 
 type action =
   | ToggleTime(float)
+  | ChangeDislayMode(Mode.t)
   | UpdateTranslation(WebSocket.t);
 
 let component = ReasonReact.reducerComponent(__MODULE__);
@@ -27,7 +31,7 @@ module Style = {
 let make = _children => {
   ...component,
 
-  initialState: () => {displayTime: 0.0, ws: [||]},
+  initialState: () => {displayMode: Conversation, displayTime: 0.0, ws: [||]},
 
   didMount: self => {
     WebSocket.(
@@ -40,6 +44,8 @@ let make = _children => {
 
   reducer: (action, state) => {
     switch (action) {
+    | ChangeDislayMode(mode) =>
+      ReasonReact.Update({...state, displayMode: mode})
     | ToggleTime(displayTime) =>
       ReasonReact.Update({
         ...state,
@@ -55,10 +61,14 @@ let make = _children => {
 
   render: ({send, state}) => {
     <>
-      <Header />
-      {switch (state.ws->Belt.Array.length) {
-       | 0 => <EmptyState />
-       | _ =>
+      <Header
+        currentDisplayMode={state.displayMode}
+        changeDisplayMode={mode => send(ChangeDislayMode(mode))}
+      />
+      {switch (state.displayMode, state.ws->Belt.Array.length) {
+       | (_, 0) => <EmptyState />
+       | (Presentation, _) => <Presentation translations={state.ws} />
+       | (Conversation, _) =>
          <ul className=Style.translations id="list">
            {state.ws
             ->Belt.Array.mapWithIndex((i, translation) => {

@@ -7,7 +7,6 @@ module Style = {
     [
       color(`hsl((0, 0, 70))),
       fontSize(`px(60)),
-      paddingTop(`px(20)),
       position(`fixed),
       textAlign(`center),
       top(`pct(50.0)),

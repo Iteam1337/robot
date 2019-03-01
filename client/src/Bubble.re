@@ -12,8 +12,12 @@ module Style = {
   let wrap = [%css
     [
       position(`relative),
+      marginBottom(`px(10)),
       width(`pct(100.0)),
-      media("(min-width: 768px)", [width(`pct(48.0))]),
+      media(
+        "(min-width: 768px)",
+        [marginBottom(`zero), width(`pct(48.0))],
+      ),
     ]
   ];
 

@@ -22,6 +22,19 @@ module Style = {
   let flagInner = [%css [position(`relative), top(`px(2))]];
 };
 
+let flag = (language: Language.t) =>
+  switch (language) {
+  | English => {js|🇬🇧|js}
+  | German => {js|🇩🇪|js}
+  | Spanish => {js|🇪🇸|js}
+  | French => {js|🇫🇷|js}
+  | Chinese => {js|🇨🇳|js}
+  | Russian => {js|🇷🇺|js}
+  | Romanian => {js|🇷🇴|js}
+  | Swedish => {js|🇸🇪|js}
+  | _ => ""
+  };
+
 let make = (~origin: Origin.t, ~language: Language.t, _children) => {
   ...component,
   render: _self => {
@@ -33,22 +46,7 @@ let make = (~origin: Origin.t, ~language: Language.t, _children) => {
         | Other => ""
         },
       |])}>
-      <div className=Style.flagInner>
-        {(
-           switch (language) {
-           | English => {js|🇬🇧|js}
-           | German => {js|🇩🇪|js}
-           | Spanish => {js|🇪🇸|js}
-           | French => {js|🇫🇷|js}
-           | Chinese => {js|🇨🇳|js}
-           | Russian => {js|🇷🇺|js}
-           | Romanian => {js|🇷🇴|js}
-           | Swedish => {js|🇸🇪|js}
-           | _ => ""
-           }
-         )
-         |> Utils.str}
-      </div>
+      <div className=Style.flagInner> {flag(language) |> Utils.str} </div>
     </div>;
   },
 };
