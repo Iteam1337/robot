@@ -5,7 +5,6 @@ module Style = {
 
   let wrap = [%css
     [
-      color(Theme.Colors.secondary),
       fontSize(`px(60)),
       paddingTop(`px(20)),
       position(`fixed),
@@ -19,8 +18,6 @@ module Style = {
 let make = _children => {
   ...component,
   render: _self => {
-    <div className={Cx.merge([|AppStyle.translations, Style.wrap|])}>
-      "Say something nice!"->Utils.str
-    </div>;
+    <div className=Style.wrap> "Say something nice!"->Utils.str </div>;
   },
 };
