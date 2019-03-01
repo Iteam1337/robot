@@ -13,21 +13,6 @@ type action =
 
 let component = ReasonReact.reducerComponent(__MODULE__);
 
-module Style = {
-  open Emotion;
-
-  let translations = [%css
-    [
-      padding(`px(20)),
-      paddingTop(`px(150)),
-      display(`inlineFlex),
-      flexDirection(`column),
-      overflow(`scroll),
-      width(`pct(100.0)),
-    ]
-  ];
-};
-
 let make = _children => {
   ...component,
 
@@ -69,30 +54,13 @@ let make = _children => {
        | (_, 0) => <EmptyState />
        | (Presentation, _) => <Presentation translations={state.ws} />
        | (Conversation, _) =>
-         <ul className=Style.translations id="list">
-           {state.ws
-            ->Belt.Array.mapWithIndex((i, translation) => {
-                let previousOrigin =
-                  switch (state.ws->Belt.Array.get(i - 1)) {
-                  | Some({origin}) => Some(origin)
-                  | None => None
-                  };
-                let nextOrigin =
-                  switch (state.ws->Belt.Array.get(i + 1)) {
-                  | Some({origin}) => Some(origin)
-                  | None => None
-                  };
-
-                <Bubble
-                  displayTime={state.displayTime}
-                  key={translation.timestamp->string_of_float}
-                  surroundingOrigins=(previousOrigin, nextOrigin)
-                  translation
-                  toggleTime={_ => send(ToggleTime(translation.timestamp))}
-                />;
-              })
-            ->ReasonReact.array}
-         </ul>
+         <Conversation
+           displayTime={state.displayTime}
+           toggleTime={translation =>
+             send(ToggleTime(translation.timestamp))
+           }
+           translations={state.ws}
+         />
        }}
     </>;
   },

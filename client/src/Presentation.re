@@ -98,28 +98,33 @@ let make = (~translations: array(WebSocket.t), _children) => {
   ...component,
   render: _self => {
     <ul className=Style.presentation>
-      {translations
-       ->Belt.Array.keepMap(t => t.origin === Me ? Some(t) : None)
-       ->Belt.Array.slice(~offset=0, ~len=3)
-       ->Belt.Array.map(t =>
-           <div
-             className=Style.transcription key={t.timestamp->string_of_float}>
-             {s(t.transcription)}
-             <div className=Style.translations>
-               {t.translations
-                ->Belt.Array.map(trans =>
-                    <div className=Style.translation key={trans.rawLanguage}>
-                      <div className=Style.flag>
-                        {s(Flag.flag(trans.language))}
+      {switch (translations->Belt.Array.length) {
+       | 0 => <EmptyState />
+       | _ =>
+         translations
+         ->Belt.Array.keepMap(t => t.origin === Me ? Some(t) : None)
+         ->Belt.Array.slice(~offset=0, ~len=3)
+         ->Belt.Array.map(t =>
+             <div
+               className=Style.transcription
+               key={t.timestamp->string_of_float}>
+               {s(t.transcription)}
+               <div className=Style.translations>
+                 {t.translations
+                  ->Belt.Array.map(trans =>
+                      <div className=Style.translation key={trans.rawLanguage}>
+                        <div className=Style.flag>
+                          {s(Flag.flag(trans.language))}
+                        </div>
+                        {s(trans.text)}
                       </div>
-                      {s(trans.text)}
-                    </div>
-                  )
-                ->ReasonReact.array}
+                    )
+                  ->ReasonReact.array}
+               </div>
              </div>
-           </div>
-         )
-       ->ReasonReact.array}
+           )
+         ->ReasonReact.array
+       }}
     </ul>;
   },
 };
