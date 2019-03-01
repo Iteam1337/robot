@@ -8,22 +8,16 @@ module Style = {
   let presentation = [%css
     [
       alignItems(`center),
-      bottom(`zero),
       display(`flex),
       flexDirection(`column),
       justifyContent(`center),
       overflow(`scroll),
       paddingTop(`px(120)),
-      position(`fixed),
       textAlign(`center),
-      top(`px(120)),
-      width(`pct(100.0)),
       media(
         "(min-width: 768px)",
         [
           fontSize(`px(100)),
-          paddingTop(`zero),
-          top(`zero),
           select(":not(:last-child)", [marginBottom(`px(60))]),
           select(
             ":nth-child(2)",
@@ -42,12 +36,14 @@ module Style = {
     [
       color(`hsl((210, 99, 12))),
       fontSize(`px(40)),
+      maxWidth(`vw(100.0)),
       select(":nth-child(2)", [fontSize(`px(24))]),
       select(":nth-child(3)", [fontSize(`px(16))]),
       media(
         "(min-width: 768px)",
         [
           fontSize(`px(100)),
+          maxWidth(`vw(60.0)),
           select(":not(:last-child)", [marginBottom(`px(60))]),
           select(
             ":nth-child(2)",
@@ -66,7 +62,6 @@ module Style = {
     [
       display(`grid),
       margin3(`px(20), `auto, `zero),
-      maxWidth(`vw(100.0)),
       gridTemplateColumns(`list([`repeat((`n(2), [`fr(1.0)]))])),
       gridRowGap(`px(10)),
       padding(`px(20)),
@@ -74,7 +69,6 @@ module Style = {
         "(min-width: 768px)",
         [
           gridTemplateColumns(`list([`repeat((`n(7), [`fr(1.0)]))])),
-          maxWidth(`vw(60.0)),
           padding(`zero),
         ],
       ),
