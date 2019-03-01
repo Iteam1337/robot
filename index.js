@@ -52,6 +52,7 @@ app.get('/translations', async (req, res) => {
 app.post('/receivetranslation', async (req, res) => {
   let translation = req.body;
   translation.origin = 'other';
+  console.log('translation received', translation)
   audiorecorder.addTranslation(translation);
 
   res.sendStatus(200);
@@ -76,7 +77,7 @@ audiorecorder.translationEvents.on('translation', (translation) => {
 
     rp(options)
       .then(result => {
-        console.log('Translation sent')
+        console.log('Translation sent', translation)
       })
       .catch(error => {
         console.error('Could not send translation', error)
