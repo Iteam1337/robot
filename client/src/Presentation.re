@@ -7,26 +7,57 @@ module Style = {
 
   let presentation = [%css
     [
+      alignItems(`center),
+      bottom(`zero),
+      display(`flex),
+      flexDirection(`column),
+      justifyContent(`center),
+      overflow(`scroll),
+      paddingTop(`px(120)),
       position(`fixed),
       textAlign(`center),
-      top(`pct(50.0)),
-      transform(`translateY(`pct(-50.0))),
+      top(`px(120)),
       width(`pct(100.0)),
+      media(
+        "(min-width: 768px)",
+        [
+          fontSize(`px(100)),
+          paddingTop(`zero),
+          top(`zero),
+          select(":not(:last-child)", [marginBottom(`px(60))]),
+          select(
+            ":nth-child(2)",
+            [fontSize(`px(60)), color(`hsl((210, 20, 40)))],
+          ),
+          select(
+            ":nth-child(3)",
+            [fontSize(`px(40)), color(`hsl((210, 20, 60)))],
+          ),
+        ],
+      ),
     ]
   ];
 
   let transcription = [%css
     [
       color(`hsl((210, 99, 12))),
-      fontSize(`px(100)),
-      select(":not(:last-child)", [marginBottom(`px(60))]),
-      select(
-        ":nth-child(2)",
-        [fontSize(`px(60)), color(`hsl((210, 20, 40)))],
-      ),
-      select(
-        ":nth-child(3)",
-        [fontSize(`px(40)), color(`hsl((210, 20, 60)))],
+      fontSize(`px(40)),
+      select(":nth-child(2)", [fontSize(`px(24))]),
+      select(":nth-child(3)", [fontSize(`px(16))]),
+      media(
+        "(min-width: 768px)",
+        [
+          fontSize(`px(100)),
+          select(":not(:last-child)", [marginBottom(`px(60))]),
+          select(
+            ":nth-child(2)",
+            [fontSize(`px(60)), color(`hsl((210, 20, 40)))],
+          ),
+          select(
+            ":nth-child(3)",
+            [fontSize(`px(40)), color(`hsl((210, 20, 60)))],
+          ),
+        ],
       ),
     ]
   ];
@@ -35,9 +66,18 @@ module Style = {
     [
       display(`grid),
       margin3(`px(20), `auto, `zero),
-      maxWidth(`vw(60.0)),
-      gridTemplateColumns(`list([`repeat((`n(7), [`fr(1.0)]))])),
+      maxWidth(`vw(100.0)),
+      gridTemplateColumns(`list([`repeat((`n(2), [`fr(1.0)]))])),
       gridRowGap(`px(10)),
+      padding(`px(20)),
+      media(
+        "(min-width: 768px)",
+        [
+          gridTemplateColumns(`list([`repeat((`n(7), [`fr(1.0)]))])),
+          maxWidth(`vw(60.0)),
+          padding(`zero),
+        ],
+      ),
     ]
   ];
 
@@ -51,8 +91,7 @@ module Style = {
       select(":not(:last-child)", [marginRight(`px(20))]),
     ]
   ];
-
-  let flag = [%css [marginRight(`px(10))]];
+  let flag = [%css [media("(min-width: 768px)", [marginRight(`px(10))])]];
 };
 
 let make = (~translations: array(WebSocket.t), _children) => {
