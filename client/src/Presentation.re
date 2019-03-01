@@ -19,7 +19,7 @@ module Style = {
     [
       color(`hsl((210, 99, 12))),
       fontSize(`px(100)),
-      select(":not(:last-child)", [marginBottom(`px(30))]),
+      select(":not(:last-child)", [marginBottom(`px(60))]),
       select(
         ":nth-child(2)",
         [fontSize(`px(60)), color(`hsl((210, 20, 40)))],
@@ -36,7 +36,7 @@ module Style = {
       display(`grid),
       margin3(`px(20), `auto, `zero),
       maxWidth(`vw(60.0)),
-      gridTemplateColumns(`list([`repeat((`n(3), [`fr(1.0)]))])),
+      gridTemplateColumns(`list([`repeat((`n(7), [`fr(1.0)]))])),
       gridRowGap(`px(10)),
     ]
   ];
@@ -45,6 +45,7 @@ module Style = {
     [
       alignItems(`center),
       display(`flex),
+      flexDirection(`column),
       fontSize(`px(16)),
       justifyContent(`center),
       select(":not(:last-child)", [marginRight(`px(20))]),
