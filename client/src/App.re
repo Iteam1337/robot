@@ -31,10 +31,9 @@ let make = _children => {
 
   didMount: self => {
     WebSocket.(
-      socket->listen("message", data => {
-        Js.log(data);
-        self.send(UpdateTranslation(data->Decode.message->Decode.response));
-      })
+      socket->listen("message", data =>
+        self.send(UpdateTranslation(data->Decode.message->Decode.response))
+      )
     )
     |> ignore;
   },
