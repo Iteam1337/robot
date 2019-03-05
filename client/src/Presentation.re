@@ -19,8 +19,14 @@ module Style = {
         [
           fontSize(`px(100)),
           select(":not(:last-child)", [marginBottom(`px(60))]),
-          select(":nth-child(2)", [fontSize(`px(60)), color(`hsl((210, 20, 40)))]),
-          select(":nth-child(3)", [fontSize(`px(40)), color(`hsl((210, 20, 60)))]),
+          select(
+            ":nth-child(2)",
+            [fontSize(`px(60)), color(`hsl((210, 20, 40)))],
+          ),
+          select(
+            ":nth-child(3)",
+            [fontSize(`px(40)), color(`hsl((210, 20, 60)))],
+          ),
         ],
       ),
     ]
@@ -39,8 +45,14 @@ module Style = {
           fontSize(`px(100)),
           maxWidth(`vw(60.0)),
           select(":not(:last-child)", [marginBottom(`px(60))]),
-          select(":nth-child(2)", [fontSize(`px(60)), color(`hsl((210, 20, 40)))]),
-          select(":nth-child(3)", [fontSize(`px(40)), color(`hsl((210, 20, 60)))]),
+          select(
+            ":nth-child(2)",
+            [fontSize(`px(60)), color(`hsl((210, 20, 40)))],
+          ),
+          select(
+            ":nth-child(3)",
+            [fontSize(`px(40)), color(`hsl((210, 20, 60)))],
+          ),
         ],
       ),
     ]
@@ -55,7 +67,10 @@ module Style = {
       padding(`px(20)),
       media(
         "(min-width: 768px)",
-        [gridTemplateColumns(`list([`repeat((`n(7), [`fr(1.0)]))])), padding(`zero)],
+        [
+          gridTemplateColumns(`list([`repeat((`n(7), [`fr(1.0)]))])),
+          padding(`zero),
+        ],
       ),
     ]
   ];
@@ -84,23 +99,34 @@ let make = (~translations: array(WebSocket.t), _children) => {
          ->Belt.Array.keepMap(t => t.origin === Me ? Some(t) : None)
          ->Belt.Array.slice(~offset=0, ~len=3)
          ->Belt.Array.map(t =>
-             <div className=Style.transcription key={t.timestamp->string_of_float}>
-               {switch (t.translations->Belt.Array.get(0)) {
-                | Some(t) => s(Flag.flag(t.language) ++ " " ++ t.text)
-                | None => s("")
-                }}
+             <div
+               className=Style.transcription
+               key={t.timestamp->string_of_float}>
+               {(
+                  switch (t.translations->Belt.Array.get(0)) {
+                  | Some(t) => Flag.flag(t.language) ++ " " ++ t.text
+                  | None => ""
+                  }
+                )
+                |> s}
                <div className=Style.translations>
                  {t.translations
                   ->Belt.Array.mapWithIndex((index, trans) =>
                       switch (index) {
                       | 0 =>
-                        <div className=Style.translation key={trans.rawLanguage}>
-                          <div className=Style.flag> {s({js|🗣️|js})} </div>
+                        <div
+                          className=Style.translation key={trans.rawLanguage}>
+                          <div className=Style.flag>
+                            {s({js|🗣️|js})}
+                          </div>
                           {s(t.transcription)}
                         </div>
                       | _ =>
-                        <div className=Style.translation key={trans.rawLanguage}>
-                          <div className=Style.flag> {s(Flag.flag(trans.language))} </div>
+                        <div
+                          className=Style.translation key={trans.rawLanguage}>
+                          <div className=Style.flag>
+                            {s(Flag.flag(trans.language))}
+                          </div>
                           {s(trans.text)}
                         </div>
                       }
